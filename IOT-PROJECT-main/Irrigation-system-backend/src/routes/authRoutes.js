@@ -30,9 +30,11 @@ router.post("/register", async (req, res) => {
     await newUser.save();
 
     // Redirect to the home page after registration
-    res.status(201).json({ 
-      message: "User registered successfully. Redirecting to home page...", 
-      redirect: "/dashboard" 
+    const token = jwt.sign({ userId: newUser._id }, "abcdefgh", { expiresIn: "1h" });
+
+    res.status(201).json({
+      message: "Registration successful",
+      token,
     });
   } catch (error) {
     console.error(error);

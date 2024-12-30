@@ -11,8 +11,6 @@ const authenticate = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, "abcdefgh");
     req.user = decoded; // Attach decoded user info to the request
-    console.log("Token:", token);
-    console.log("Decoded:", decoded);
 
     next();
   } catch (error) {

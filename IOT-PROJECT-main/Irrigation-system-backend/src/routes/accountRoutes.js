@@ -35,20 +35,16 @@ router.get("/profile", async (req, res) => {
 
 
 // Update user personal information
-router.put("/update", async (req, res) => {
-  const { email, firstName, lastName } = req.body;
-
-  if (!email) {
-    return res.status(400).json({ message: "Email is required to update the account." });
-  }
+router.put("/update", authenticate, async (req, res) => {
+  const { firstName, lastName } = req.body;
+  const userId = req.user.userId;
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
 
-    // Update the user's information only if new data is provided
     user.firstName = firstName || user.firstName;
     user.lastName = lastName || user.lastName;
 
@@ -59,6 +55,7 @@ router.put("/update", async (req, res) => {
     res.status(500).json({ message: "Internal server error." });
   }
 });
+
 
 // Change user password
 router.put("/change-password", async (req, res) => {
